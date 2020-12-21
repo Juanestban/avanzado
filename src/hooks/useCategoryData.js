@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { getCharacters } from "../../api/endpoint"
+import { getCharacters } from "../../api/endpoints/endpoint"
 
 export const useCategoryData = () => {
   const [categories, setCategories] = useState([])
