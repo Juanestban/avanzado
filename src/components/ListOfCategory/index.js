@@ -1,31 +1,48 @@
 import React, { useState, useEffect } from "react"
+import { useCategoryData } from "../../hooks/useCategoryData"
 import { Category } from "../Category"
 import { Item, List } from "./styles"
-// import { getCharacters } from "../../../api/endpoint"
 
 export const ListOfCategory = () => {
-  const [category, setCategory] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+  const [showFixed, setShowFixed] = useState(false)
+  const { categories, loading } = useCategoryData()
+  // const signal = axios.CancelToken
 
-  // const getSomeCharacters = async () => {
-  //   try {
-  //     const res = await getCharacters()
-  //     const resJSON = res.json()
-  //     console.log(resJSON)
-  //     // setCategory(character)
-  //   } catch (error) {
-  //     console.log(error)
-  //   }
-  // }
-
-  useEffect(() => {}, [])
-
-  return (
-    <List>
-      {category.map((cat) => (
-        <Item key={cat}>
-          <Category />
+  const renderList = (fixed) => (
+    <List fixed={fixed}>
+      {categories.map((category) => (
+        <Item key={category.id}>
+          <Category {...category} />
         </Item>
       ))}
     </List>
+  )
+
+  useEffect(() => {
+    const onScroll = () => {
+      const newShowFixed = window.scrollY > 240
+      showFixed !== newShowFixed && setShowFixed(newShowFixed)
+    }
+
+    document.addEventListener("scroll", onScroll)
+
+    return () => {
+      document.removeEventListener("scroll", onScroll)
+    }
+  }, [showFixed])
+
+  return (
+    <>
+      {loading ? (
+        <List>
+          <Item>
+            <Category />
+          </Item>
+        </List>
+      ) : (
+        renderList()
+      )}
+      {showFixed && renderList(true)}
+    </>
   )
 }
