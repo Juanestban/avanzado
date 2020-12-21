@@ -9,9 +9,7 @@ export const ListPhotoCard = () => {
   return (
     <ul>
       {photoCard.map((card) => (
-        <li key={card}>
-          <PhotoCard />
-        </li>
+        <PhotoCard key={card} id={card} />
       ))}
     </ul>
   )
